@@ -13,6 +13,15 @@ COOPS.feedback = {
 };
 
 /**
+ * Optional local override for magic-link accounts.
+ * Prefer Netlify env: SUPABASE_URL + SUPABASE_ANON_KEY (read via /api/config).
+ */
+COOPS.supabase = {
+  url: '',
+  anonKey: ''
+};
+
+/**
  * USGS monitoring locations with continuous water temperature (param 00010).
  * IDs verified against api.waterdata.usgs.gov continuous collection.
  */

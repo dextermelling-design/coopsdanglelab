@@ -44,6 +44,9 @@
       '<nav aria-label="Main"><ul class="nav-links">' +
       links +
       '</ul></nav>' +
+      '<div class="account-slot" id="accountSlot">' +
+      '<button type="button" class="acct-btn" id="loginBtn"><i class="fa-solid fa-user"></i> Log in</button>' +
+      '</div>' +
       '<button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>' +
       '</div>' +
       '<div class="wrap search-bar" id="searchBar">' +
@@ -57,6 +60,7 @@
       '</div>' +
       '<div class="mobile-menu" id="mobileMenu">' +
       mobile +
+      '<div id="mobileAccount"><a href="#" id="mobileLogin">Log in</a></div>' +
       '<a href="#feedback" id="mobileFeedback">Feedback</a>' +
       '</div></header>';
   }
@@ -102,6 +106,16 @@
       '<input type="email" id="fbEmail" name="email" maxlength="120" placeholder="If you want a reply"></label></div>' +
       '<p class="fb-status" id="fbStatus" role="status"></p>' +
       '<button type="submit" class="btn btn-primary" id="fbSubmit"><i class="fa-solid fa-paper-plane"></i> Send feedback</button>' +
+      '</form></div></div>' +
+      '<div class="fb-backdrop is-closed" id="loginModal">' +
+      '<div class="fb-dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">' +
+      '<button type="button" class="fb-close" id="loginClose" aria-label="Close login"><i class="fa-solid fa-xmark"></i></button>' +
+      '<h2 id="loginTitle">Log in to save waters</h2>' +
+      '<p class="muted">We email you a one-time link. No password to remember.</p>' +
+      '<form id="loginForm">' +
+      '<label>Email <input type="email" id="loginEmail" required placeholder="you@email.com" autocomplete="email"></label>' +
+      '<p class="fb-status" id="loginStatus" role="status"></p>' +
+      '<button type="submit" class="btn btn-primary"><i class="fa-solid fa-envelope"></i> Send login link</button>' +
       '</form></div></div>';
   }
 })();

@@ -15,6 +15,26 @@ Then open **http://localhost:8765**
 
 USGS river temps also work if you open `index.html` directly (CORS allowed). NOAA NDBC buoys need `serve.py` because the browser blocks direct NDBC requests.
 
+## Accounts (magic link + favorites)
+
+Anglers can log in with an email link and star waters. Catch photos are not in this pass.
+
+**You have to create a free Supabase project** or Log in will say accounts are not wired up.
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. SQL editor → paste and run `supabase/schema.sql`
+3. **Authentication → URL configuration**
+   - Site URL: `https://coopsdanglelab.netlify.app`
+   - Redirect URLs: `https://coopsdanglelab.netlify.app/**` and `http://localhost:8765/**`
+4. **Authentication → Email** — keep magic link / OTP enabled
+5. Copy **Project URL** and **anon public** key
+6. Netlify → Site configuration → Environment variables:
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+7. Redeploy
+
+Until those env vars exist, the public site still works; Save just asks you to log in and then explains the setup.
+
 ## Pages
 
 Sticky top nav. Each tool is its own URL so Netlify / Google Analytics can see real usage:

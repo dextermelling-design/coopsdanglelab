@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signing in | Coop's Fishing</title>
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="home">
+<div id="site-top"></div>
+<main class="page-sheet">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Account</span>
+      <h2>Signing you in…</h2>
+      <p id="authStatus">Hang on while we finish the login link.</p>
+    </div>
+  </div>
+</main>
+<div id="site-bottom"></div>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/national.js"></script>
+<script src="assets/js/auth.js"></script>
+<script>
+  (async function () {
+    const status = document.getElementById('authStatus');
+    const go = function () {
+      let next = 'favorites.html';
+      try {
+        next = sessionStorage.getItem('coops_return') || next;
+        sessionStorage.removeItem('coops_return');
+      } catch (e) {}
+      location.replace(next);
+    };
+    try {
+      const start = Date.now();
+      while (Date.now() - start < 8000) {
+        if (window.COOPS && COOPS.account && COOPS.account.user) {
+          go();
+          return;
+        }
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      if (status) {
+        status.innerHTML =
+          'Could not finish sign-in. Open the link from the same device/browser, or <a href="index.html">go home</a> and try again.';
+      }
+    } catch (e) {
+      if (status) status.textContent = e.message || 'Sign-in failed.';
+    }
+  })();
+</script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

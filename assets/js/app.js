@@ -415,25 +415,28 @@
           ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>`
           : '';
         return `
-      <a class="spot-card" href="${locationUrl(s.id)}">
-        <div class="spot-badge">${escapeHtml(s.region)}</div>
-        <h3>${escapeHtml(s.name)}</h3>
-        <p class="spot-state"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(s.state)}</p>
-        <div class="species-tags">
-          ${s.species.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join('')}
-        </div>
-        <p class="spot-why">${escapeHtml(s.why)}</p>
-        <div class="spot-records">
-          <strong><i class="fa-solid fa-trophy"></i> Record / trophy notes</strong>
-          <p>${escapeHtml(s.records)}</p>
-        </div>
-        <p class="spot-best"><i class="fa-solid fa-calendar-days"></i> Best: ${escapeHtml(s.best)}</p>
-        ${depthLine}
-        <p class="spot-chart-link">Open full report →</p>
-      </a>`;
+      <article class="spot-card">
+        <a class="spot-card-main" href="${locationUrl(s.id)}">
+          <div class="spot-badge">${escapeHtml(s.region)}</div>
+          <h3>${escapeHtml(s.name)}</h3>
+          <p class="spot-state"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(s.state)}</p>
+          <div class="species-tags">
+            ${s.species.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join('')}
+          </div>
+          <p class="spot-why">${escapeHtml(s.why)}</p>
+          <div class="spot-records">
+            <strong><i class="fa-solid fa-trophy"></i> Record / trophy notes</strong>
+            <p>${escapeHtml(s.records)}</p>
+          </div>
+          <p class="spot-best"><i class="fa-solid fa-calendar-days"></i> Best: ${escapeHtml(s.best)}</p>
+          ${depthLine}
+          <p class="spot-chart-link">Open full report →</p>
+        </a>
+        <button type="button" class="fav-btn" data-fav="${s.id}">Save</button>
+      </article>`;
       })
       .join('');
-
+    if (COOPS.account && typeof COOPS.account.bindFavs === 'function') COOPS.account.bindFavs();
   }
 
   function statesInRegion(regionId) {
@@ -1687,7 +1690,8 @@
           chart
             ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>`
             : ''
-        }`;
+        }
+        <button type="button" class="fav-btn lg" data-fav="${spot.id}">Save this water</button>`;
     }
     applyLiveSurfaceTemp(true);
     renderLocationTemp();
@@ -1706,6 +1710,7 @@
     renderAstro();
     renderDepths();
     requestAnimationFrame(() => renderDepths());
+    if (COOPS.account && typeof COOPS.account.bindFavs === 'function') COOPS.account.bindFavs();
   }
 
   function renderLocationTemp() {
