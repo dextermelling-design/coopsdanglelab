@@ -1538,7 +1538,9 @@
 
   /* ---------- Boot ---------- */
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function boot() {
+    if (window.__COOPS_BOOTED__) return;
+    window.__COOPS_BOOTED__ = true;
     initNav();
     initSearch();
     initFeedback();
@@ -1556,7 +1558,13 @@
     const y = $('#year');
     if (y) y.textContent = new Date().getFullYear();
     renderUsage();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 
   function renderUsage() {
     const el = $('#usagePanel');

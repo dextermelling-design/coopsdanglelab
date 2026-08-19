@@ -19,11 +19,12 @@ function page({ file, id, title, desc, extraHead, extraScripts, body }) {
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="${id}">
-<script src="assets/js/chrome.js"></script>
-<main class="page-sheet">
+<div id="site-top"></div>
+<main>
 ${body}
 </main>
-<script src="assets/js/chrome-end.js"></script>
+<div id="site-bottom"></div>
+<script src="assets/js/chrome.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/national.js"></script>
 <script src="assets/js/depths.js"></script>
