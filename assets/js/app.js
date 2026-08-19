@@ -374,8 +374,13 @@
                 : ''
             }
             <p class="source-tag">${escapeHtml(r.source)}${
-              spot ? ' · Open ' + escapeHtml(spot.name) : ''
+              spot ? ' · ' + escapeHtml(spot.name) : ''
             }</p>
+            ${
+              href
+                ? '<span class="card-more"><i class="fa-solid fa-circle-info"></i> More info</span>'
+                : ''
+            }
           </${tag}>`;
       })
       .join('');
@@ -430,7 +435,7 @@
           </div>
           <p class="spot-best"><i class="fa-solid fa-calendar-days"></i> Best: ${escapeHtml(s.best)}</p>
           ${depthLine}
-          <p class="spot-chart-link">Open full report →</p>
+          <span class="card-more"><i class="fa-solid fa-circle-info"></i> More info</span>
         </a>
         <button type="button" class="fav-btn" data-fav="${s.id}">Save</button>
       </article>`;
@@ -660,6 +665,11 @@
           <span>Named areas <strong>${chart.areas.length}</strong></span>
         </div>
         <div class="depth-sources">${src}</div>
+        ${
+          spot && !$('#locationPage')
+            ? `<p style="margin:0.9rem 0 0"><a class="btn btn-primary btn-sm" href="${locationUrl(chart.id)}"><i class="fa-solid fa-circle-info"></i> Full report</a></p>`
+            : ''
+        }
       </div>
       <div class="depth-kpis">
         <div class="depth-kpi"><span>Average depth</span><strong>${chart.avgDepth} ft</strong></div>
@@ -794,6 +804,7 @@
           </div>
           <p>${escapeHtml(a.structure)}</p>
           <div class="species-tags">${a.species.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join('')}</div>
+          <span class="card-more ghost">${on ? 'Showing details' : 'More info'}</span>
         </button>`;
       })
       .join('');
@@ -822,7 +833,12 @@
       <p class="area-kind">${escapeHtml(area.kind)} · typical ${escapeHtml(area.depth)} · ${escapeHtml(coord)}</p>
       <p>${escapeHtml(area.tip)}</p>
       <p class="muted small" style="margin-top:0.45rem"><i class="fa-solid fa-calendar-days"></i> ${escapeHtml(area.season)}</p>
-      <p class="muted small">${escapeHtml(area.structure)}</p>`;
+      <p class="muted small">${escapeHtml(area.structure)}</p>
+      ${
+        !$('#locationPage')
+          ? `<p style="margin:0.85rem 0 0"><a class="btn btn-primary btn-sm" href="${locationUrl(chart.id, area.id)}"><i class="fa-solid fa-circle-info"></i> Full report for this area</a></p>`
+          : ''
+      }`;
   }
 
   function renderColumn(chart) {

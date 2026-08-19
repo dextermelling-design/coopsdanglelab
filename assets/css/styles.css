@@ -1852,6 +1852,46 @@ a.temp-card:hover {
   font-weight: 700;
 }
 
+.card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+  padding: 0.42rem 0.85rem;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  width: fit-content;
+  line-height: 1.2;
+  border: 1.5px solid var(--navy);
+}
+
+a.temp-card .card-more,
+.spot-card-main .card-more {
+  color: #fff;
+}
+
+a.temp-card:hover .card-more,
+.spot-card:hover .card-more,
+.area-card:hover .card-more:not(.ghost) {
+  background: var(--lake);
+  border-color: var(--lake);
+}
+
+.card-more.ghost {
+  background: #fff;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+
+.area-card.is-on .card-more.ghost {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
 .dc-map-pin {
   background: none;
   border: 0;
