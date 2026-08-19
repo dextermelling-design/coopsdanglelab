@@ -39,7 +39,7 @@
     if (window.supabase && window.supabase.createClient) return Promise.resolve();
     return new Promise((resolve, reject) => {
       const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js';
       s.onload = () => resolve();
       s.onerror = () => reject(new Error('Could not load auth library'));
       document.head.appendChild(s);
@@ -244,7 +244,11 @@
         }
       } catch (err) {
         if (status) {
-          status.textContent = err.message || 'Could not send the link.';
+          const raw = (err && err.message) || '';
+          const badKey = /invalid api key|invalid jwt|jwt/i.test(raw);
+          status.textContent = badKey
+            ? 'Invalid API key. In Netlify, edit SUPABASE_ANON_KEY and paste the full publishable or anon key from Supabase (not the secret key), then redeploy.'
+            : raw || 'Could not send the link.';
           status.className = 'fb-status err';
         }
       }
