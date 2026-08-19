@@ -175,8 +175,7 @@ page({
   desc: 'Depth charts, named fishing areas, and how deep to fish from surface temperature.',
   extraHead:
     '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">',
-  extraScripts:
-    '<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>',
+  extraScripts: '',
   body: `<div class="wrap">
         <div class="section-head">
           <span class="eyebrow">Where they sit</span>

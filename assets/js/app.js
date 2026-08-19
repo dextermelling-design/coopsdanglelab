@@ -530,13 +530,17 @@
     const chart = chartForSelection();
     if (!chart) return;
 
-    renderDepthPills(chart);
-    renderDepthOverview(chart);
-    renderSchematic(chart);
-    renderProfile(chart);
-    renderAreas(chart);
-    renderAreaDetail(chart);
-    renderColumn(chart);
+    try {
+      renderDepthPills(chart);
+      renderDepthOverview(chart);
+      renderSchematic(chart);
+      renderProfile(chart);
+      renderAreas(chart);
+      renderAreaDetail(chart);
+      renderColumn(chart);
+    } catch (e) {
+      console.warn('Depth chart render', e);
+    }
     renderDepthMap(chart);
   }
 
@@ -853,12 +857,50 @@
     }
   }
 
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve(window.L);
+    if (window.__leafletP) return window.__leafletP;
+    window.__leafletP = new Promise((resolve, reject) => {
+      const urls = [
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'
+      ];
+      const tryUrl = (i) => {
+        if (i >= urls.length) {
+          reject(new Error('Leaflet failed to load'));
+          return;
+        }
+        const s = document.createElement('script');
+        s.src = urls[i];
+        s.async = true;
+        s.onload = () => (window.L ? resolve(window.L) : tryUrl(i + 1));
+        s.onerror = () => tryUrl(i + 1);
+        document.head.appendChild(s);
+      };
+      tryUrl(0);
+    });
+    return window.__leafletP;
+  }
+
   function renderDepthMap(chart) {
     const el = $('#depthMap');
     if (!el) return;
     if (typeof L === 'undefined') {
-      el.innerHTML =
-        '<p class="empty-msg" style="padding:1rem">Map tiles need a network connection (Leaflet). The schematic and area list still work.</p>';
+      if (!el.dataset.waiting) {
+        el.dataset.waiting = '1';
+        el.innerHTML = '<p class="empty-msg" style="padding:1rem">Loading map…</p>';
+      }
+      loadLeaflet()
+        .then(() => {
+          delete el.dataset.waiting;
+          el.innerHTML = '';
+          depthMap = null;
+          renderDepthMap(chart);
+        })
+        .catch(() => {
+          el.innerHTML =
+            '<p class="empty-msg" style="padding:1rem">Map tiles need a network connection. The schematic and area list still work.</p>';
+        });
       return;
     }
     if (!depthMap) {
@@ -1555,6 +1597,9 @@
     renderAstro();
     renderDepths();
     if ($('#tempGrid') || $('#depths')) loadWaterTemps();
+    if ($('#depths')) {
+      requestAnimationFrame(() => renderDepths());
+    }
     const y = $('#year');
     if (y) y.textContent = new Date().getFullYear();
     renderUsage();
