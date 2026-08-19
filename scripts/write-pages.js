@@ -173,9 +173,8 @@ page({
   id: 'depths',
   title: "Depth Charts | Coop's Fishing",
   desc: 'Depth charts, named fishing areas, and how deep to fish from surface temperature.',
-  extraHead:
-    '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">',
-  extraScripts: '',
+  extraHead: '<link rel="stylesheet" href="assets/vendor/leaflet/leaflet.min.css">',
+  extraScripts: '<script src="assets/vendor/leaflet/leaflet.min.js"></script>',
   body: `<div class="wrap">
         <div class="section-head">
           <span class="eyebrow">Where they sit</span>

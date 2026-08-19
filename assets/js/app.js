@@ -864,8 +864,9 @@
     if (window.__leafletP) return window.__leafletP;
     window.__leafletP = new Promise((resolve, reject) => {
       const urls = [
-        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'
+        'assets/vendor/leaflet/leaflet.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
+        'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
       ];
       const tryUrl = (i) => {
         if (i >= urls.length) {
@@ -906,11 +907,21 @@
       return;
     }
     if (!depthMap) {
+      el.innerHTML = '';
       depthMap = L.map(el, { scrollWheelZoom: false });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 16,
-        attribution: '&copy; OpenStreetMap &copy; CARTO'
-      }).addTo(depthMap);
+        attribution: '&copy; OpenStreetMap'
+      });
+      tiles.on('tileerror', () => {
+        if (el.dataset.tileFallback) return;
+        el.dataset.tileFallback = '1';
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 16,
+          attribution: '&copy; OpenStreetMap &copy; CARTO'
+        }).addTo(depthMap);
+      });
+      tiles.addTo(depthMap);
     }
     depthMarkers.forEach((m) => m.remove());
     depthMarkers = [];
