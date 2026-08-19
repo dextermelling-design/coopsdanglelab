@@ -36,6 +36,49 @@
     return 'depths.html' + (s ? '?' + s : '');
   }
 
+  function locationUrl(waterId, areaId) {
+    const q = new URLSearchParams();
+    if (waterId) q.set('water', waterId);
+    if (areaId) q.set('area', areaId);
+    const s = q.toString();
+    return 'location.html' + (s ? '?' + s : '');
+  }
+
+  function spotForTempReading(r) {
+    const spots = COOPS.spots || [];
+    if (r && r.id) {
+      for (let i = 0; i < spots.length; i++) {
+        if ((spots[i].tempStations || []).indexOf(r.id) !== -1) return spots[i];
+      }
+      const charts = COOPS.depthCharts || [];
+      for (let i = 0; i < charts.length; i++) {
+        if ((charts[i].tempStations || []).indexOf(r.id) !== -1) {
+          const s = spots.find((x) => x.id === charts[i].id);
+          if (s) return s;
+        }
+      }
+    }
+    const hay = ((r && r.title) || '') + ' ' + ((r && r.subtitle) || '');
+    const h = hay.toLowerCase();
+    let best = null;
+    let score = 0;
+    spots.forEach((s) => {
+      let n = 0;
+      String(s.name)
+        .toLowerCase()
+        .split(/[^a-z0-9]+/)
+        .filter((w) => w.length > 3)
+        .forEach((w) => {
+          if (h.indexOf(w) !== -1) n += w.length;
+        });
+      if (n > score) {
+        score = n;
+        best = s;
+      }
+    });
+    return score >= 6 ? best : null;
+  }
+
   /** Latest live readings, reused by the depth-column model. */
   let liveTempReadings = [];
   let selectedChartId = 'erie-west';
@@ -265,10 +308,11 @@
     const status = $('#tempStatus');
     if (!grid) {
       const silent = await fetchAllLiveTemps();
-      if (silent.results.length && $('#depths')) {
+      if ($('#depths')) {
         applyLiveSurfaceTemp(false);
         renderDepths();
       }
+      if ($('#locationPage')) renderLocationTemp();
       return;
     }
 
@@ -301,8 +345,14 @@
       .map((r) => {
         const band = tempBand(r.f);
         const bandClass = bandClassName(r.f);
+        const spot = spotForTempReading(r);
+        const href = spot ? locationUrl(spot.id) : '';
+        const tag = href ? 'a' : 'article';
+        const extra = href
+          ? ` href="${href}" class="temp-card ${bandClass} is-link"`
+          : ` class="temp-card ${bandClass}"`;
         return `
-          <article class="temp-card ${bandClass}">
+          <${tag}${extra}>
             <div class="temp-card-top">
               <div>
                 <h3>${escapeHtml(r.title)}</h3>
@@ -323,8 +373,10 @@
                 ? `<p class="temp-tip"><strong>${band.label}:</strong> ${band.tip}</p>`
                 : ''
             }
-            <p class="source-tag">${escapeHtml(r.source)}</p>
-          </article>`;
+            <p class="source-tag">${escapeHtml(r.source)}${
+              spot ? ' · Open ' + escapeHtml(spot.name) : ''
+            }</p>
+          </${tag}>`;
       })
       .join('');
   }
@@ -360,11 +412,10 @@
       .map((s) => {
         const chart = COOPS.depthChartById(s.id);
         const depthLine = chart
-          ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>
-             <a class="spot-chart-link" href="${depthsUrl(s.id)}">Depth chart &amp; how deep to fish →</a>`
+          ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>`
           : '';
         return `
-      <article class="spot-card">
+      <a class="spot-card" href="${locationUrl(s.id)}">
         <div class="spot-badge">${escapeHtml(s.region)}</div>
         <h3>${escapeHtml(s.name)}</h3>
         <p class="spot-state"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(s.state)}</p>
@@ -378,7 +429,8 @@
         </div>
         <p class="spot-best"><i class="fa-solid fa-calendar-days"></i> Best: ${escapeHtml(s.best)}</p>
         ${depthLine}
-      </article>`;
+        <p class="spot-chart-link">Open full report →</p>
+      </a>`;
       })
       .join('');
 
@@ -1500,7 +1552,7 @@
       input.value = hit.label;
       input.blur();
     }
-    location.href = depthsUrl(hit.id, hit.areaId || null);
+    location.href = locationUrl(hit.id, hit.areaId || null);
   }
 
   function initFilters() {
@@ -1593,6 +1645,123 @@
     });
   }
 
+  /* ---------- Location drill-down ---------- */
+
+  function renderLocationPage() {
+    const root = $('#locationPage');
+    if (!root) return;
+    const q = new URLSearchParams(location.search);
+    const id = q.get('water');
+    const area = q.get('area');
+    const spot = (COOPS.spots || []).find((s) => s.id === id);
+    const hero = $('#locationHero');
+    if (!spot) {
+      if (hero) {
+        hero.innerHTML =
+          '<p class="eyebrow">Location</p><h2>Water not found</h2><p><a href="spots.html">Back to spots</a></p>';
+      }
+      return;
+    }
+    selectedChartId = spot.id;
+    selectedAreaId = area || null;
+    depthFilter.region = spot.regionId || 'all';
+    chartLat = spot.lat;
+    chartLon = spot.lon;
+    document.title = spot.name + " | Coop's Fishing";
+    const chart =
+      typeof COOPS.depthChartById === 'function' ? COOPS.depthChartById(spot.id) : null;
+    if (hero) {
+      hero.innerHTML = `
+        <p class="loc-crumb"><a href="spots.html">Spots</a> / ${escapeHtml(spot.region)}</p>
+        <div class="spot-badge">${escapeHtml(spot.region)}</div>
+        <h2>${escapeHtml(spot.name)}</h2>
+        <p class="spot-state"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(spot.state)}</p>
+        <div class="species-tags">${spot.species.map((x) => `<span class="tag">${escapeHtml(x)}</span>`).join('')}</div>
+        <p class="spot-why">${escapeHtml(spot.why)}</p>
+        <div class="spot-records">
+          <strong><i class="fa-solid fa-trophy"></i> Record / trophy notes</strong>
+          <p>${escapeHtml(spot.records)}</p>
+        </div>
+        <p class="spot-best"><i class="fa-solid fa-calendar-days"></i> Best: ${escapeHtml(spot.best)}</p>
+        ${
+          chart
+            ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>`
+            : ''
+        }`;
+    }
+    applyLiveSurfaceTemp(true);
+    renderLocationTemp();
+    renderLocationBait(spot);
+    if ($('#locationSelect')) {
+      const sel = $('#locationSelect');
+      const val = spot.lat + ',' + spot.lon;
+      if (![...sel.options].some((o) => o.value === val)) {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = spot.name;
+        sel.appendChild(opt);
+      }
+      sel.value = val;
+    }
+    renderAstro();
+    renderDepths();
+    requestAnimationFrame(() => renderDepths());
+  }
+
+  function renderLocationTemp() {
+    const el = $('#locationTemp');
+    if (!el) return;
+    const chart = chartForSelection();
+    const reading = chart ? pickLiveTempForChart(chart) : null;
+    if (!reading) {
+      el.innerHTML =
+        '<p class="muted">Live gauge still loading, or no nearby station. Seasonal estimate is used for depth advice below.</p>';
+      return;
+    }
+    const band = tempBand(reading.f);
+    el.innerHTML = `
+      <div class="temp-card ${bandClassName(reading.f)}" style="box-shadow:none;margin:0">
+        <div class="temp-card-top">
+          <div>
+            <h3>${escapeHtml(reading.title)}</h3>
+            <p class="muted">${escapeHtml(reading.subtitle || '')}</p>
+          </div>
+          <div class="temp-readout">
+            <span class="temp-f">${reading.f.toFixed(1)}°</span>
+            <span class="temp-unit">F</span>
+            <span class="temp-c">${reading.c.toFixed(1)}°C</span>
+          </div>
+        </div>
+        ${band ? `<p class="temp-tip"><strong>${band.label}:</strong> ${band.tip}</p>` : ''}
+        <p class="source-tag">${escapeHtml(reading.source)} · ${escapeHtml(timeAgo(reading.when))}</p>
+      </div>`;
+  }
+
+  function renderLocationBait(spot) {
+    const grid = $('#locationBait');
+    if (!grid || !spot) return;
+    const names = (spot.species || []).map((x) => x.toLowerCase());
+    const list = (COOPS.baitGuide || []).filter((b) => {
+      const sp = b.species.toLowerCase();
+      return names.some((n) => sp.indexOf(n) !== -1 || n.indexOf(sp.split(/[^a-z]+/)[0]) !== -1);
+    });
+    const use = list.length ? list : (COOPS.baitGuide || []).slice(0, 3);
+    grid.innerHTML = use
+      .map(
+        (b) => `
+      <article class="bait-card">
+        <header><span class="bait-icon">${b.icon}</span><h3>${escapeHtml(b.species)}</h3></header>
+        <div class="bait-cols">
+          <div><h4>Live / Natural</h4><ul>${b.live.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+          <div><h4>Artificial</h4><ul>${b.artificial.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+        </div>
+        <p class="bait-tips">${escapeHtml(b.tips)}</p>
+        <p class="bait-temp"><i class="fa-solid fa-temperature-half"></i> ${escapeHtml(b.temp)}</p>
+      </article>`
+      )
+      .join('');
+  }
+
   /* ---------- Boot ---------- */
 
   function boot() {
@@ -1605,16 +1774,17 @@
     initAstroControls();
     initDepthControls();
     if ($('#locationSelect')) fillLocationSelect();
+    if ($('#locationPage')) renderLocationPage();
     if ($('#spotsGrid')) renderSpots();
-    if ($('#baitGrid')) renderBait();
-    if ($('#phaseDisplay') || $('#solarPanel')) renderAstro();
-    if ($('#depths')) {
+    if ($('#baitGrid') && !$('#locationPage')) renderBait();
+    if (($('#phaseDisplay') || $('#solarPanel')) && !$('#locationPage')) renderAstro();
+    if ($('#depths') && !$('#locationPage')) {
       applyDepthQuery();
       applyLiveSurfaceTemp(true);
       renderDepths();
       requestAnimationFrame(() => renderDepths());
     }
-    if ($('#tempGrid') || $('#depths')) loadWaterTemps();
+    if ($('#tempGrid') || $('#depths') || $('#locationPage')) loadWaterTemps();
     const y = $('#year');
     if (y) y.textContent = new Date().getFullYear();
     renderUsage();

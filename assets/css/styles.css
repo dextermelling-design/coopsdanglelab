@@ -849,9 +849,43 @@ section {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.spot-card:hover {
+a.spot-card,
+a.temp-card {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.spot-card:hover,
+a.temp-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 48px rgba(10, 22, 40, 0.14);
+}
+
+.loc-crumb {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+.loc-crumb a {
+  font-weight: 700;
+}
+
+.loc-hero {
+  padding-top: 2.5rem;
+  padding-bottom: 1rem;
+}
+
+.loc-hero h2 {
+  font-family: var(--display);
+  font-size: clamp(1.75rem, 3.5vw, 2.35rem);
+  margin: 0.35rem 0 0.4rem;
+}
+
+.loc-h {
+  font-family: var(--display);
+  margin: 0 0 0.75rem;
 }
 
 .spot-badge {

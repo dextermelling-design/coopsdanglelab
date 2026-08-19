@@ -44,6 +44,7 @@ COOPS.ndbcStations = [
 COOPS.spots = [
   {
     id: 'erie-west',
+    tempStations: ['04193500', '45005', '45216'],
     name: 'Lake Erie — Western Basin',
     state: 'OH / MI',
     states: ['OH', 'MI'],
@@ -57,6 +58,7 @@ COOPS.spots = [
   },
   {
     id: 'saginaw',
+    tempStations: ['45008'],
     name: 'Saginaw Bay',
     state: 'MI',
     states: ['MI'],
@@ -70,6 +72,7 @@ COOPS.spots = [
   },
   {
     id: 'st-clair',
+    tempStations: ['04165500'],
     name: 'Lake St. Clair',
     state: 'MI',
     states: ['MI'],
@@ -96,6 +99,7 @@ COOPS.spots = [
   },
   {
     id: 'green-bay',
+    tempStations: ['040851385', '45161', '45007'],
     name: 'Green Bay / Fox River',
     state: 'WI',
     states: ['WI'],
@@ -135,6 +139,7 @@ COOPS.spots = [
   },
   {
     id: 'mississippi',
+    tempStations: ['05420500'],
     name: 'Mississippi River (Pools 4–9)',
     state: 'MN / WI / IA',
     states: ['MN', 'WI', 'IA'],
@@ -148,6 +153,7 @@ COOPS.spots = [
   },
   {
     id: 'ohio',
+    tempStations: ['03290500'],
     name: 'Ohio River',
     state: 'OH / IN / KY',
     states: ['OH', 'IN', 'KY'],
@@ -161,6 +167,7 @@ COOPS.spots = [
   },
   {
     id: 'traverse',
+    tempStations: ['45007', '45161'],
     name: 'Grand Traverse Bay',
     state: 'MI',
     states: ['MI'],
@@ -187,6 +194,7 @@ COOPS.spots = [
   },
   {
     id: 'shelbyville',
+    tempStations: ['05586300'],
     name: 'Lake Shelbyville',
     state: 'IL',
     states: ['IL'],
