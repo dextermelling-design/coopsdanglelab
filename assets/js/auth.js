@@ -304,6 +304,55 @@
       paintAccount();
     } finally {
       account.ready = true;
+      paintCatchStrip();
+    }
+  }
+
+  function stripPhotoUrl(path) {
+    const base = (COOPS.supabase && COOPS.supabase.url) || '';
+    if (!base || !path) return '';
+    return (
+      base.replace(/\/$/, '') +
+      '/storage/v1/object/public/catches/' +
+      String(path)
+        .split('/')
+        .map(encodeURIComponent)
+        .join('/')
+    );
+  }
+
+  async function paintCatchStrip() {
+    const host = $('#catchStrip');
+    const photos = $('#catchStripPhotos');
+    if (!host || !photos) return;
+    try {
+      const sb = await getClient();
+      if (!sb) return;
+      const { data, error } = await sb
+        .from('catches')
+        .select('photo_path,species,water_name')
+        .order('created_at', { ascending: false })
+        .limit(8);
+      if (error || !data || !data.length) return;
+      photos.innerHTML = data
+        .map((row) => {
+          const src = stripPhotoUrl(row.photo_path);
+          if (!src) return '';
+          const title = [row.species, row.water_name].filter(Boolean).join(' · ').replace(/"/g, '');
+          return (
+            '<a href="catches.html" title="' +
+            title +
+            '"><img src="' +
+            src +
+            '" alt="' +
+            title +
+            '"></a>'
+          );
+        })
+        .join('');
+      host.hidden = false;
+    } catch (e) {
+      /* board not set up yet */
     }
   }
 

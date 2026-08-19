@@ -10,7 +10,7 @@
     { id: 'home', href: 'index.html', label: 'Home' },
     { id: 'temps', href: 'temps.html', label: 'Temps' },
     { id: 'spots', href: 'spots.html', label: 'Spots' },
-    { id: 'catches', href: 'catches.html', label: 'Catches' },
+    { id: 'catches', href: 'catches.html', label: 'Catch photos' },
     { id: 'depths', href: 'depths.html', label: 'Depths' },
     { id: 'bait', href: 'bait.html', label: 'Bait' },
     { id: 'charts', href: 'charts.html', label: 'Charts' },
@@ -19,13 +19,15 @@
   const links = nav
     .map((n) => {
       const on = n.id === page ? ' class="active"' : '';
-      return '<li><a href="' + n.href + '"' + on + '>' + n.label + '</a></li>';
+      const icon = n.id === 'catches' ? '<i class="fa-solid fa-camera"></i> ' : '';
+      return '<li><a href="' + n.href + '"' + on + '>' + icon + n.label + '</a></li>';
     })
     .join('');
   const mobile = nav
     .map((n) => {
       const on = n.id === page ? ' class="active"' : '';
-      return '<a href="' + n.href + '"' + on + '>' + n.label + '</a>';
+      const icon = n.id === 'catches' ? '<i class="fa-solid fa-camera"></i> ' : '';
+      return '<a href="' + n.href + '"' + on + '>' + icon + n.label + '</a>';
     })
     .join('');
 
@@ -63,7 +65,13 @@
       mobile +
       '<div id="mobileAccount"><a href="#" id="mobileLogin">Log in</a></div>' +
       '<a href="#feedback" id="mobileFeedback">Feedback</a>' +
-      '</div></header>';
+      '</div></header>' +
+      '<div class="catch-strip" id="catchStrip" hidden>' +
+      '<div class="wrap catch-strip-inner">' +
+      '<a class="catch-strip-label" href="catches.html"><i class="fa-solid fa-camera"></i> Latest catches</a>' +
+      '<div class="catch-strip-photos" id="catchStripPhotos"></div>' +
+      '<a class="catch-strip-all" href="catches.html">See all</a>' +
+      '</div></div>';
   }
 
   const bot = document.getElementById('site-bottom');
