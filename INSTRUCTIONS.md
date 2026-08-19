@@ -121,14 +121,20 @@ If you see:
 
 that is **normal**. Click the button to run it anyway. You want **Success. No rows returned**.
 
-**If it errors about storage / buckets:**
+7. **New query** again. Open and paste:
+
+   `C:\Users\dexte\Coops fishing\supabase\catches-storage.sql`
+
+8. Run that too (same warning is OK).
+
+**If the storage script errors:**
 
 1. Left sidebar: **Storage**
 2. **New bucket**
 3. Name it exactly: `catches`
 4. Turn **Public** on
 5. Create the bucket
-6. Run `catches.sql` again
+6. Run `catches-storage.sql` again
 
 ### 5B. Make yourself the person who can delete any post
 

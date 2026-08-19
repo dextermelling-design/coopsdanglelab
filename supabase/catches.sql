@@ -51,48 +51,5 @@ grant select on table public.catches to anon, authenticated;
 grant insert, delete on table public.catches to authenticated;
 grant select on table public.admins to authenticated;
 
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values (
-  'catches',
-  'catches',
-  true,
-  5242880,
-  array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-)
-on conflict (id) do update
-set
-  public = true,
-  file_size_limit = excluded.file_size_limit,
-  allowed_mime_types = excluded.allowed_mime_types;
-
-drop policy if exists "catches_media_read" on storage.objects;
-create policy "catches_media_read"
-  on storage.objects for select
-  using (bucket_id = 'catches');
-
-drop policy if exists "catches_media_insert" on storage.objects;
-create policy "catches_media_insert"
-  on storage.objects for insert
-  to authenticated
-  with check (
-    bucket_id = 'catches'
-    and (storage.foldername(name))[1] = auth.uid()::text
-  );
-
-drop policy if exists "catches_media_delete" on storage.objects;
-create policy "catches_media_delete"
-  on storage.objects for delete
-  to authenticated
-  using (
-    bucket_id = 'catches'
-    and (
-      (storage.foldername(name))[1] = auth.uid()::text
-      or exists (select 1 from public.admins a where a.user_id = auth.uid())
-    )
-  );
-
--- After this succeeds, run a second query with YOUR login email so you can delete posts:
--- insert into public.admins (user_id)
--- select id from auth.users
--- where lower(email) = lower('you@email.com')
--- on conflict (user_id) do nothing;
+-- Stop here if this is all you are running. Photos also need supabase/catches-storage.sql
+-- (bucket named "catches", public). Then make yourself admin with your login email.

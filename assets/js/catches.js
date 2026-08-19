@@ -210,7 +210,10 @@
       renderGrid(rows);
     } catch (err) {
       if (status) {
-        status.textContent = err.message || 'Could not load catches.';
+        const raw = (err && err.message) || '';
+        status.textContent = /schema cache|could not find the table|catches/i.test(raw)
+          ? 'Catch photos are not set up yet. In Supabase, open SQL Editor, paste supabase/catches.sql, and click Run. Then refresh this page.'
+          : raw || 'Could not load catches.';
         status.className = 'status-line';
       }
     }
