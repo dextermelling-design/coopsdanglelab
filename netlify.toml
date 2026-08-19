@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# NOAA blocks browser CORS; this keeps Great Lakes / coastal buoy temps working.
+[[redirects]]
+  from = "/api/ndbc/*"
+  to = "/.netlify/functions/ndbc?id=:splat"
+  status = 200

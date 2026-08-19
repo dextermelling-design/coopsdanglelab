@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coop's Fishing | Nationwide Fishing Spots, Depth Charts &amp; Live Water Temps</title>
+  <meta name="description" content="Coop's Fishing — featured U.S. fishing waters by region and state, depth charts and public fishing areas, live USGS water temperatures, bait by species, and lunar &amp; solar charts.">
+  <meta name="keywords" content="fishing spots, depth chart, water temperature, solunar chart, bass, walleye, redfish, stripers, Great Lakes, Gulf Coast">
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/images/logo-mark.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="wrap">
+      <span><i class="fa-solid fa-water"></i> Live USGS gauges + coastal / Great Lakes buoys</span>
+      <span>Featured waters coast to coast · <strong>Bass · Walleye · Stripers · Redfish</strong></span>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap nav-inner">
+      <a href="#home" class="logo">
+        <img class="logo-mark" src="assets/images/logo-mark.jpg" width="48" height="48" alt="">
+        <div class="logo-text">
+          <span>Coop's Fishing</span>
+          <span>U.S. Hot Spots</span>
+        </div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#temps">Water Temps</a></li>
+          <li><a href="#spots">Hot Spots</a></li>
+          <li><a href="#depths">Depth Charts</a></li>
+          <li><a href="#bait">Bait Guide</a></li>
+          <li><a href="#charts">Lunar &amp; Solar</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="wrap search-bar" id="searchBar">
+      <form id="searchForm" role="search" autocomplete="off">
+        <label class="sr-only" for="globalSearch">Search fishing waters</label>
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="globalSearch" placeholder="Search lakes, reefs, states, or species…" autocomplete="off" spellcheck="false">
+        <kbd class="search-kbd" title="Press / to search">/</kbd>
+      </form>
+      <div class="search-results" id="searchResults" hidden role="listbox" aria-label="Search results"></div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#temps">Water Temps</a>
+      <a href="#spots">Hot Spots</a>
+      <a href="#depths">Depth Charts</a>
+      <a href="#bait">Bait Guide</a>
+      <a href="#charts">Lunar &amp; Solar</a>
+      <a href="#about">About</a>
+      <a href="#feedback" id="mobileFeedback">Feedback</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="wrap hero-inner">
+        <p class="hero-kicker"><i class="fa-solid fa-compass"></i> Nationwide angler's desk</p>
+        <h1>Find the bite.<br><em>Read the water.</em><br>Time the moon.</h1>
+        <p class="hero-lead">
+          Featured waters from the Kenai to the Keys. Filter by region or state,
+          check live temps, open a depth chart, and time the moon.
+        </p>
+        <form class="hero-search" id="heroSearchForm" role="search" autocomplete="off">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" id="heroSearch" placeholder="Try “Erie”, “snook”, “Kenai”, or “Niagara Reef”…" autocomplete="off" spellcheck="false">
+          <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        </form>
+        <div class="search-results hero-search-results" id="heroSearchResults" hidden role="listbox" aria-label="Search results"></div>
+        <div class="hero-actions">
+          <a href="#temps" class="btn btn-primary"><i class="fa-solid fa-temperature-half"></i> Live Water Temps</a>
+          <a href="#depths" class="btn btn-ghost"><i class="fa-solid fa-water"></i> Depth charts</a>
+          <a href="#charts" class="btn btn-ghost"><i class="fa-solid fa-moon"></i> Today's Solunar</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <strong>60</strong>
+            <span>Featured waters</span>
+          </div>
+          <div>
+            <strong>Live</strong>
+            <span>USGS + lake SST</span>
+          </div>
+          <div>
+            <strong>14</strong>
+            <span>Species bait guides</span>
+          </div>
+          <div>
+            <strong>Daily</strong>
+            <span>Moon &amp; sun charts</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live water temps -->
+    <section id="temps">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Conditions</span>
+          <h2>Live water temperatures</h2>
+          <p>
+            Real-time readings from USGS stream gauges near popular U.S. fisheries,
+            plus NOAA coastal and Great Lakes buoy water temperatures when available.
+            Match the number to the species guide below.
+          </p>
+        </div>
+        <div class="section-tools">
+          <button type="button" class="btn btn-primary btn-sm" id="refreshTemps">
+            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+          </button>
+        </div>
+        <p class="status-line" id="tempStatus">Loading…</p>
+        <div class="temp-grid" id="tempGrid" aria-live="polite"></div>
+        <p class="status-line" style="margin-top:1.25rem">
+          <i class="fa-solid fa-circle-info"></i>
+          USGS values are provisional. Lake surface temps are model estimates near the coordinates listed — actual fishing depths may differ.
+          Always check local regs and ice safety.
+        </p>
+      </div>
+    </section>
+
+    <!-- Hot spots -->
+    <section id="spots">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Where to go</span>
+          <h2>Featured U.S. fishing spots</h2>
+          <p>
+            Start with a region, then a state. These are well-known public destinations —
+            not every pond in the country, and not secret waypoints.
+          </p>
+        </div>
+        <div class="place-filter" id="spotFilters">
+          <div class="filter-pills" id="regionPills" role="group" aria-label="Filter by region"></div>
+          <div class="place-filter-row">
+            <label>
+              State
+              <select id="stateSelect"></select>
+            </label>
+            <label class="grow">
+              Filter this list
+              <input type="search" id="spotSearch" placeholder="Filter by name, state, or species…">
+            </label>
+            <span class="spot-count" id="spotCount"></span>
+          </div>
+          <div class="filter-pills species-pills" id="speciesPills" role="group" aria-label="Filter by species"></div>
+        </div>
+        <div class="spots-grid" id="spotsGrid"></div>
+      </div>
+    </section>
+
+    <!-- Depth charts & fishing areas -->
+    <section id="depths">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Where they sit</span>
+          <h2>Depth charts &amp; fishing areas</h2>
+          <p>
+            Named public structure for each hotspot — reefs, bays, channels, dams —
+            plus a water-column model that turns today’s surface temp into
+            <strong>how deep to fish</strong> for the species on that water.
+          </p>
+        </div>
+
+        <div class="place-filter" id="depthFilters">
+          <div class="filter-pills" id="depthRegionPills" role="group" aria-label="Depth chart region"></div>
+          <div class="place-filter-row">
+            <label>
+              State
+              <select id="depthStateSelect"></select>
+            </label>
+            <label class="grow">
+              Water
+              <select id="depthWaterSelect"></select>
+            </label>
+          </div>
+        </div>
+
+        <div class="depth-overview" id="depthOverview"></div>
+
+        <div class="depth-stage">
+          <div class="depth-panel">
+            <div class="depth-panel-head">
+              <h3><i class="fa-solid fa-map"></i> Fishing areas</h3>
+              <p class="muted small">Tap a numbered pin. Coords are public area centers — not secret waypoints.</p>
+            </div>
+            <div id="depthMap" class="depth-map" role="img" aria-label="Map of fishing areas"></div>
+          </div>
+          <div class="depth-panel">
+            <div class="depth-panel-head">
+              <h3><i class="fa-solid fa-layer-group"></i> Depth schematic</h3>
+              <p class="muted small">Stylized bathymetry for planning — not a navigation chart.</p>
+            </div>
+            <div id="depthSchematic" class="depth-schematic"></div>
+            <div class="depth-legend" id="depthLegend"></div>
+          </div>
+        </div>
+
+        <div class="depth-profile-card">
+          <h3><i class="fa-solid fa-chart-area"></i> Cross-section</h3>
+          <div id="depthProfile"></div>
+        </div>
+
+        <div class="depth-howto" id="depthHowto">
+          <div class="depth-panel-head depth-howto-head">
+            <div>
+              <h3><i class="fa-solid fa-temperature-arrow-down"></i> How deep to fish</h3>
+              <p class="muted small" id="columnStatus">Modeled from surface temp and this lake’s mix type.</p>
+            </div>
+            <form class="surf-form" id="surfForm">
+              <label>
+                Surface temp (°F)
+                <input type="number" id="surfTempInput" min="32" max="95" step="0.1" inputmode="decimal">
+              </label>
+              <button type="button" class="btn btn-ghost btn-sm" id="useLiveSurf" style="color:var(--navy);border-color:#c5d0da;background:#fff">
+                <i class="fa-solid fa-satellite-dish"></i> Use live
+              </button>
+              <button type="submit" class="btn btn-primary btn-sm">Update column</button>
+            </form>
+          </div>
+          <div class="column-grid">
+            <div id="columnChart"></div>
+            <div id="columnAdvice"></div>
+          </div>
+        </div>
+
+        <div id="areaDetail" class="area-detail" hidden></div>
+        <div class="areas-grid" id="areasGrid"></div>
+
+        <p class="status-line" style="margin-top:1.25rem">
+          <i class="fa-solid fa-circle-info"></i>
+          Areas come from official DNR reports, NOAA Great Lakes bathymetry, and well-known public structure names.
+          There is no free “live hotspot” API — fish move. Always carry a current NOAA or DNR chart and check regs.
+        </p>
+      </div>
+    </section>
+
+    <!-- Bait guide -->
+    <section id="bait">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">What to throw</span>
+          <h2>Best bait by species</h2>
+          <p>
+            Live bait and artificials by species — Midwest walleye water to Gulf redfish flats.
+            Mix presentations with water temp and solunar windows.
+          </p>
+        </div>
+        <div class="bait-grid" id="baitGrid"></div>
+      </div>
+    </section>
+
+    <!-- Lunar & Solar -->
+    <section id="charts">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">When to fish</span>
+          <h2>Lunar &amp; solar charts</h2>
+          <p>
+            Moon phase, rise/set, solunar major &amp; minor feeding periods, plus sunrise, sunset,
+            and golden hour. Pick a featured water or use your location.
+          </p>
+        </div>
+
+        <div class="astro-controls">
+          <label>
+            Location
+            <select id="locationSelect"></select>
+          </label>
+          <button type="button" class="btn btn-ghost btn-sm" id="useMyLocation" style="color:var(--navy);border-color:#c5d0da;background:#fff">
+            <i class="fa-solid fa-location-crosshairs"></i> Use my location
+          </button>
+          <span id="customLocLabel"></span>
+          <div class="date-nav">
+            <button type="button" class="btn btn-ghost btn-sm" id="astroPrev" style="color:var(--navy);border-color:#c5d0da;background:#fff" aria-label="Previous day">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <span id="astroDateLabel"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="astroNext" style="color:var(--navy);border-color:#c5d0da;background:#fff" aria-label="Next day">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" id="astroToday">Today</button>
+          </div>
+        </div>
+
+        <div class="astro-grid">
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-moon" style="color:var(--lake)"></i> Moon phase</h3>
+            <div class="phase-box" id="phaseDisplay"></div>
+            <div class="rating-box" id="dayRating"></div>
+          </div>
+
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-sun" style="color:var(--amber)"></i> Solar chart</h3>
+            <div id="solarPanel"></div>
+          </div>
+
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-fish-fins" style="color:var(--moss)"></i> Solunar periods</h3>
+            <div id="solunarPanel"></div>
+          </div>
+
+          <div class="astro-card">
+            <h3><i class="fa-regular fa-calendar" style="color:var(--lake)"></i> Monthly moon calendar</h3>
+            <span id="moonMonthLabel"></span>
+            <div class="moon-calendar" id="moonCalendar"></div>
+            <p class="muted small" style="margin-top:0.75rem">Tap a day to load that date's charts. Peak days (new/full) are highlighted.</p>
+          </div>
+
+          <div class="astro-card timeline-card">
+            <h3><i class="fa-solid fa-timeline" style="color:var(--coral)"></i> 24-hour bite timeline</h3>
+            <div id="dayTimeline"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Coop's Fishing</span>
+          <h2>How to use this desk</h2>
+          <p>Stack the odds: right water, right temp, right bait, right window.</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>Game plan</h3>
+            <ul>
+              <li><strong>Temps first</strong> — see which waters are in the species' sweet spot.</li>
+              <li><strong>Pick a spot</strong> — filter by region or state, then open trophy notes and seasonal timing.</li>
+              <li><strong>Read the depth chart</strong> — named reefs, bays, and holes, then fish the temp layer those species want.</li>
+              <li><strong>Match the bait</strong> — live and artificial options by fish.</li>
+              <li><strong>Check the sky</strong> — major/minor solunar periods and golden hour for low-light bites.</li>
+            </ul>
+          </div>
+          <div class="about-card">
+            <h3>Data sources</h3>
+            <ul>
+              <li><strong>USGS Water Data API</strong> — continuous water temperature at river/stream gauges near popular U.S. fisheries.</li>
+              <li><strong>NOAA NDBC</strong> — Great Lakes buoy water temps (via local server proxy).</li>
+              <li><strong>Depth &amp; areas</strong> — public structure from DNR reports and NOAA Great Lakes bathymetry; column temps are modeled from the surface reading (not a probe).</li>
+              <li><strong>Solar &amp; lunar</strong> — calculated in your browser (approx. rise/set &amp; solunar windows).</li>
+            </ul>
+            <p style="margin:1rem 0 0;font-size:0.9rem;opacity:0.85">
+              Solunar theory is a traditional angler tool — combine it with weather fronts, barometer, and local reports.
+              Always follow state regulations and practice safe catch-and-release on trophy fish.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>
+        &copy; <span id="year"></span> Coop's Fishing · U.S. Hot Spots.
+        Water data courtesy of USGS &amp; Open-Meteo. Not affiliated with any agency.
+        <button type="button" class="footer-feedback" data-open-feedback>Send feedback</button>
+      </p>
+    </div>
+  </footer>
+
+  <button type="button" class="feedback-fab" id="feedbackFab" data-open-feedback>
+    <i class="fa-solid fa-comment-dots" aria-hidden="true"></i>
+    <span>Feedback</span>
+  </button>
+
+  <div class="fb-backdrop" id="feedbackModal" hidden>
+    <div class="fb-dialog" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
+      <button type="button" class="fb-close" id="feedbackClose" aria-label="Close feedback">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <h2 id="fbTitle">Help make this better</h2>
+      <p class="muted">What should Coop add, fix, or fish next? Short notes are perfect.</p>
+      <form id="feedbackForm" name="feedback" method="POST" data-netlify="true" data-netlify-honeypot="website">
+        <input type="hidden" name="form-name" value="feedback">
+        <input type="hidden" name="href" id="fbHref" value="">
+        <input type="hidden" name="when" id="fbWhen" value="">
+        <input type="text" name="website" class="fb-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <fieldset class="fb-kinds">
+          <legend class="sr-only">What kind of note?</legend>
+          <label><input type="radio" name="kind" value="idea" checked> Idea</label>
+          <label><input type="radio" name="kind" value="missing"> Missing water</label>
+          <label><input type="radio" name="kind" value="bug"> Something's off</label>
+          <label><input type="radio" name="kind" value="love"> Love it</label>
+        </fieldset>
+        <label>
+          Your note
+          <textarea id="fbMessage" name="message" required maxlength="2000" rows="5" placeholder="Add Lake X, the Erie chart is confusing, I fish the Delta…"></textarea>
+        </label>
+        <label>
+          Related water <span class="fb-opt">(optional)</span>
+          <select id="fbWater" name="water">
+            <option value="">None / general</option>
+          </select>
+        </label>
+        <div class="fb-row">
+          <label>
+            Name <span class="fb-opt">(optional)</span>
+            <input type="text" id="fbName" name="name" maxlength="80" placeholder="How should we thank you?">
+          </label>
+          <label>
+            Email <span class="fb-opt">(optional)</span>
+            <input type="email" id="fbEmail" name="email" maxlength="120" placeholder="If you want a reply">
+          </label>
+        </div>
+        <p class="fb-status" id="fbStatus" role="status"></p>
+        <button type="submit" class="btn btn-primary" id="fbSubmit">
+          <i class="fa-solid fa-paper-plane"></i> Send feedback
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/national.js"></script>
+  <script src="assets/js/depths.js"></script>
+  <script src="assets/js/astro.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
