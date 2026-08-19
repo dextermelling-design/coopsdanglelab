@@ -13,12 +13,11 @@ COOPS.feedback = {
 };
 
 /**
- * Optional local override for magic-link accounts.
- * Prefer Netlify env: SUPABASE_URL + SUPABASE_ANON_KEY (read via /api/config).
+ * Magic-link accounts. Publishable key is safe in the browser (RLS protects data).
  */
 COOPS.supabase = {
-  url: '',
-  anonKey: ''
+  url: 'https://iqqgwpwicdaluszbpqko.supabase.co',
+  anonKey: 'sb_publishable_SSPS0HlvDuljVFHGkwmgBA_I1mt8lfe'
 };
 
 /**
