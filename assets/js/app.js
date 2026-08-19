@@ -1168,12 +1168,12 @@
     }
 
     const open = () => {
-      modal.hidden = false;
+      modal.classList.remove('is-closed');
       document.body.style.overflow = 'hidden';
       $('#fbMessage')?.focus();
     };
     const close = () => {
-      modal.hidden = true;
+      modal.classList.add('is-closed');
       document.body.style.overflow = '';
     };
 
@@ -1188,7 +1188,7 @@
       if (e.target === modal) close();
     });
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && !modal.hidden) close();
+      if (e.key === 'Escape' && !modal.classList.contains('is-closed')) close();
     });
 
     form.addEventListener('submit', async (e) => {
@@ -1216,10 +1216,7 @@
         setFbStatus('Got it. Thanks — this is how the desk gets better.', 'ok');
         setTimeout(close, 1400);
       } catch (err) {
-        setFbStatus(
-          'Could not send from this host. Copy your note, or set COOPS.feedback.email in assets/js/data.js before you share the site.',
-          'err'
-        );
+        setFbStatus('Could not send just now. Try again in a minute, or email the note to the site owner.', 'err');
       } finally {
         submit.disabled = false;
       }
@@ -1234,30 +1231,48 @@
 
   async function sendFeedback(payload) {
     const cfg = COOPS.feedback || {};
+    const encoded = new URLSearchParams({
+      'form-name': 'feedback',
+      kind: payload.kind,
+      message: payload.message,
+      water: payload.water,
+      name: payload.name,
+      email: payload.email,
+      href: payload.href,
+      when: payload.when,
+      website: ''
+    }).toString();
 
-    // Netlify Forms — this is the live path on netlify.app
+    // Netlify Function — works even if Forms has not registered yet
     try {
-      const res = await fetch('/', {
+      const res = await fetch('/api/feedback', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'feedback',
-          kind: payload.kind,
-          message: payload.message,
-          water: payload.water,
-          name: payload.name,
-          email: payload.email,
-          href: payload.href,
-          when: payload.when
-        }).toString()
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload)
       });
       if (res.ok) return true;
     } catch (e) {
-      /* local file:// or a host that is not Netlify */
+      /* not on Netlify / no function */
+    }
+
+    // Netlify Forms AJAX
+    for (const url of ['/', '/index.html', '/?form-name=feedback']) {
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encoded
+        });
+        if (res.ok || res.status === 303 || res.status === 302) return true;
+      } catch (e) {
+        /* try next */
+      }
     }
 
     const endpoints = [];
-    if (cfg.endpoint) endpoints.push({ type: 'local', url: cfg.endpoint });
+    if (cfg.endpoint && cfg.endpoint !== '/api/feedback') {
+      endpoints.push({ type: 'local', url: cfg.endpoint });
+    }
     if (cfg.email && /@/.test(cfg.email)) {
       endpoints.push({
         type: 'formsubmit',

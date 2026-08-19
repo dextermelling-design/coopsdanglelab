@@ -42,13 +42,13 @@ Coops fishing/
 
 ## Feedback (Netlify)
 
-The floating **Feedback** button posts to **Netlify Forms**. After you deploy:
+The floating **Feedback** button posts to a Netlify function (`/api/feedback`) and also to **Netlify Forms**.
 
-1. Open the Netlify site → **Forms** → `feedback`
-2. Turn on **email notifications** (Forms → Form notifications) so each note hits your inbox
-3. Read and reply from the Forms tab
+1. Open the Netlify site → **Forms** → `feedback` for the inbox
+2. Turn on **Form notifications** if you want each note emailed
+3. Function logs also print each submission (Functions → `feedback` → logs)
 
-First deploy after adding the form is what registers it. Spam is filtered by the honeypot field.
+Redeploy after this change so the form is registered and the function is live.
 
 Local (`python serve.py`) still appends notes to `feedback/submissions.jsonl`.
 

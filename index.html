@@ -381,14 +381,27 @@
     <span>Feedback</span>
   </button>
 
-  <div class="fb-backdrop" id="feedbackModal" hidden>
+  <!-- Static copy so Netlify registers the form at deploy (hidden attribute is skipped). -->
+  <form name="feedback" method="POST" data-netlify="true" data-netlify-honeypot="website" class="fb-detect" tabindex="-1" aria-hidden="true">
+    <input type="hidden" name="form-name" value="feedback">
+    <input type="text" name="website">
+    <input type="text" name="kind">
+    <textarea name="message"></textarea>
+    <input type="text" name="water">
+    <input type="text" name="name">
+    <input type="email" name="email">
+    <input type="text" name="href">
+    <input type="text" name="when">
+  </form>
+
+  <div class="fb-backdrop is-closed" id="feedbackModal">
     <div class="fb-dialog" role="dialog" aria-modal="true" aria-labelledby="fbTitle">
       <button type="button" class="fb-close" id="feedbackClose" aria-label="Close feedback">
         <i class="fa-solid fa-xmark"></i>
       </button>
       <h2 id="fbTitle">Help make this better</h2>
       <p class="muted">What should Coop add, fix, or fish next? Short notes are perfect.</p>
-      <form id="feedbackForm" name="feedback" method="POST" data-netlify="true" data-netlify-honeypot="website">
+      <form id="feedbackForm" method="POST" action="/" data-netlify-honeypot="website">
         <input type="hidden" name="form-name" value="feedback">
         <input type="hidden" name="href" id="fbHref" value="">
         <input type="hidden" name="when" id="fbWhen" value="">

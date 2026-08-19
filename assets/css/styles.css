@@ -1805,6 +1805,17 @@ section {
   transform: translateY(-1px);
 }
 
+.fb-detect {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
 .fb-backdrop {
   position: fixed;
   inset: 0;
@@ -1815,7 +1826,7 @@ section {
   padding: 1rem;
 }
 
-.fb-backdrop[hidden] {
+.fb-backdrop.is-closed {
   display: none;
 }
 
