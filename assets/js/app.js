@@ -482,6 +482,7 @@
   }
 
   function chartForSelection() {
+    if (typeof COOPS.depthChartById !== 'function') return null;
     return COOPS.depthChartById(selectedChartId);
   }
 
@@ -491,6 +492,7 @@
 
   function applyLiveSurfaceTemp(force) {
     const chart = chartForSelection();
+    if (!chart) return;
     const match = pickLiveTempForChart(chart);
     if (match) {
       surfTempF = Math.round(match.f * 10) / 10;
@@ -1006,6 +1008,8 @@
   }
 
   function renderAstro() {
+    if (!COOPS.astro || typeof COOPS.astro.dayAstro !== 'function') return;
+    if (!$('#phaseDisplay') && !$('#solarPanel') && !$('#solunarPanel')) return;
     const day = COOPS.astro.dayAstro(chartDate, chartLat, chartLon);
     const phaseEl = $('#phaseDisplay');
     const solarEl = $('#solarPanel');
@@ -1587,28 +1591,44 @@
     initSearch();
     initFeedback();
     initFilters();
-    fillLocationSelect();
     initAstroControls();
     initDepthControls();
-    applyDepthQuery();
-    applyLiveSurfaceTemp(true);
-    renderSpots();
-    renderBait();
-    renderAstro();
-    renderDepths();
-    if ($('#tempGrid') || $('#depths')) loadWaterTemps();
+    if ($('#locationSelect')) fillLocationSelect();
+    if ($('#spotsGrid')) renderSpots();
+    if ($('#baitGrid')) renderBait();
+    if ($('#phaseDisplay') || $('#solarPanel')) renderAstro();
     if ($('#depths')) {
+      applyDepthQuery();
+      applyLiveSurfaceTemp(true);
+      renderDepths();
       requestAnimationFrame(() => renderDepths());
     }
+    if ($('#tempGrid') || $('#depths')) loadWaterTemps();
     const y = $('#year');
     if (y) y.textContent = new Date().getFullYear();
     renderUsage();
   }
 
+  function safeBoot() {
+    try {
+      boot();
+    } catch (e) {
+      console.warn('boot failed', e);
+      if ($('#tempGrid')) loadWaterTemps();
+      if ($('#depths')) {
+        try {
+          renderDepths();
+        } catch (e2) {
+          console.warn('depths retry', e2);
+        }
+      }
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
+    document.addEventListener('DOMContentLoaded', safeBoot);
   } else {
-    boot();
+    safeBoot();
   }
 
   function renderUsage() {
