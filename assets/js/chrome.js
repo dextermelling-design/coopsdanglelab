@@ -10,6 +10,7 @@
     { id: 'home', href: 'index.html', label: 'Home' },
     { id: 'temps', href: 'temps.html', label: 'Temps' },
     { id: 'spots', href: 'spots.html', label: 'Spots' },
+    { id: 'catches', href: 'catches.html', label: 'Catches' },
     { id: 'depths', href: 'depths.html', label: 'Depths' },
     { id: 'bait', href: 'bait.html', label: 'Bait' },
     { id: 'charts', href: 'charts.html', label: 'Charts' },
@@ -110,7 +111,7 @@
       '<div class="fb-backdrop is-closed" id="loginModal">' +
       '<div class="fb-dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">' +
       '<button type="button" class="fb-close" id="loginClose" aria-label="Close login"><i class="fa-solid fa-xmark"></i></button>' +
-      '<h2 id="loginTitle">Log in to save waters</h2>' +
+      '<h2 id="loginTitle">Log in to save waters and post catches</h2>' +
       '<p class="muted">We email you a one-time link. No password to remember.</p>' +
       '<form id="loginForm">' +
       '<label>Email <input type="email" id="loginEmail" required placeholder="you@email.com" autocomplete="email"></label>' +

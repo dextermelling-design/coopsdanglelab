@@ -15,14 +15,14 @@ Then open **http://localhost:8765**
 
 USGS river temps also work if you open `index.html` directly (CORS allowed). NOAA NDBC buoys need `serve.py` because the browser blocks direct NDBC requests.
 
-## Accounts (magic link + favorites)
+## Accounts (magic link, favorites, catch photos)
 
-Anglers can log in with an email link and star waters. Catch photos are not in this pass.
+Anglers can log in with an email link, star waters, and post catch photos to a public board. Owners and admins can remove posts.
 
 **You have to create a free Supabase project** or Log in will say accounts are not wired up.
 
 1. Create a project at [supabase.com](https://supabase.com)
-2. SQL editor → paste and run `supabase/schema.sql`
+2. SQL editor → paste and run `supabase/schema.sql`, then `supabase/catches.sql`. After catches.sql, run the admin insert with your login email so you can remove posts.
 3. **Authentication → URL configuration**
    - Site URL: `https://coopsdanglelab.netlify.app`
    - Redirect URLs: `https://coopsdanglelab.netlify.app/**` and `http://localhost:8765/**`
@@ -47,6 +47,7 @@ Sticky top nav. Each tool is its own URL so Netlify / Google Analytics can see r
 | `depths.html` | Depth charts & how deep to fish |
 | `bait.html` | Bait guide |
 | `charts.html` | Lunar & solar |
+| `catches.html` | Public catch photo board |
 | `about.html` | How to use the desk |
 | `usage.html` | First-party page-view totals |
 
@@ -61,6 +62,7 @@ Old `#temps` hashes on the home page redirect to the new files.
 | **Depth charts** | Named public fishing areas, stylized bathymetry, map pins, and a surface-temp → depth column that recommends how deep to fish |
 | **Bait guide** | Live & artificial recommendations for walleye, bass, pike, muskie, cats, crappie, perch, salmon/lakers |
 | **Lunar & solar** | Moon phase, monthly calendar, solunar major/minor windows, sunrise/sunset, golden hour, 24h timeline |
+| **Catch board** | Public photos and notes from signed-in anglers; owners and admins can remove posts |
 
 ## Project layout
 
@@ -74,8 +76,10 @@ Coops fishing/
   assets/js/astro.js     # moon/sun/solunar math
   assets/js/app.js         # UI + live fetches
   assets/js/chrome.js      # sticky top nav
+  assets/js/auth.js        # magic link + favorites
+  assets/js/catches.js     # public catch board
   assets/js/track.js       # page-view beacon
-  temps.html spots.html depths.html bait.html charts.html about.html usage.html
+  temps.html spots.html depths.html bait.html charts.html catches.html about.html usage.html
   netlify.toml
   netlify/functions/
 ```

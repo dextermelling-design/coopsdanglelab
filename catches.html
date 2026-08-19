@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch board | Coop's Fishing</title>
+  <meta name="description" content="Public catch photos from Coop's Dangle Lab anglers. Log in to post a fish you caught.">
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/images/logo-mark.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="catches">
+<div id="site-top"></div>
+<main>
+<section id="catches">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The board</span>
+      <h2>Catch photos</h2>
+      <p>
+        Public photos from anglers using Coop's Dangle Lab. Log in to post a fish you caught.
+        Keep it family-friendly — inappropriate posts get removed.
+      </p>
+    </div>
+    <p class="status-line" id="catchGate"></p>
+    <form class="catch-form" id="catchForm" hidden>
+      <h3>Log a catch</h3>
+      <div class="catch-form-grid">
+        <label>Photo
+          <input type="file" id="catchPhoto" accept="image/jpeg,image/png,image/webp,image/gif" required>
+        </label>
+        <label>Species
+          <select id="catchSpecies" required></select>
+        </label>
+        <label id="catchSpeciesOtherWrap">
+          <span class="sr-only">Other species</span>
+          <input type="text" id="catchSpeciesOther" maxlength="80" placeholder="Species name" hidden>
+        </label>
+        <label>Water
+          <select id="catchWater"></select>
+        </label>
+        <label>
+          <span class="sr-only">Other water</span>
+          <input type="text" id="catchWaterOther" maxlength="80" placeholder="Water name if not listed" hidden>
+        </label>
+        <label class="catch-notes-label">Notes
+          <textarea id="catchNotes" rows="3" maxlength="600" placeholder="Bait, depth, time of day — short is fine."></textarea>
+        </label>
+      </div>
+      <p class="fb-status" id="catchFormStatus" role="status"></p>
+      <button type="submit" class="btn btn-primary" id="catchSubmit">
+        <i class="fa-solid fa-camera"></i> Post to the board
+      </button>
+    </form>
+    <p class="status-line" id="catchStatus">Loading…</p>
+    <div class="catch-grid" id="catchGrid"></div>
+  </div>
+</section>
+</main>
+<div id="site-bottom"></div>
+<script src="assets/js/chrome.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/national.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/catches.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

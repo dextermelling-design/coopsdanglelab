@@ -27,3 +27,5 @@ drop policy if exists "favorites_delete_own" on public.favorites;
 create policy "favorites_delete_own"
   on public.favorites for delete
   using (auth.uid() = user_id);
+
+-- Catch photos (public board): also run supabase/catches.sql.

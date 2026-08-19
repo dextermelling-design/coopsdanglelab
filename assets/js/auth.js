@@ -12,7 +12,9 @@
     user: null,
     favs: new Set(),
     client: null,
-    configured: false
+    configured: false,
+    isAdmin: false,
+    ready: false
   };
   window.COOPS = window.COOPS || {};
   COOPS.account = account;
@@ -61,6 +63,7 @@
     });
     return account.client;
   }
+  account.getClient = getClient;
 
   async function loadFavs() {
     account.favs = new Set();
@@ -72,6 +75,18 @@
       return;
     }
     (data || []).forEach((row) => account.favs.add(row.water_id));
+  }
+
+  async function loadAdmin() {
+    account.isAdmin = false;
+    const sb = await getClient();
+    if (!sb || !account.user) return;
+    try {
+      const { data } = await sb.from('admins').select('user_id').eq('user_id', account.user.id).maybeSingle();
+      account.isAdmin = !!(data && data.user_id);
+    } catch (e) {
+      account.isAdmin = false;
+    }
   }
 
   function shortEmail(email) {
@@ -268,17 +283,27 @@
       account.configured = true;
       const { data } = await sb.auth.getSession();
       account.user = data.session && data.session.user ? data.session.user : null;
-      if (account.user) await loadFavs();
+      if (account.user) {
+        await loadFavs();
+        await loadAdmin();
+      }
       paintAccount();
       sb.auth.onAuthStateChange(async (_event, session) => {
         account.user = session && session.user ? session.user : null;
-        if (account.user) await loadFavs();
-        else account.favs = new Set();
+        if (account.user) {
+          await loadFavs();
+          await loadAdmin();
+        } else {
+          account.favs = new Set();
+          account.isAdmin = false;
+        }
         paintAccount();
       });
     } catch (e) {
       console.warn('auth', e);
       paintAccount();
+    } finally {
+      account.ready = true;
     }
   }
 

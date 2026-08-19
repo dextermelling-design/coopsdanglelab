@@ -2169,6 +2169,139 @@ a.temp-card:hover .card-more,
   color: var(--coral);
 }
 
+#catches {
+  background: linear-gradient(180deg, var(--foam) 0%, var(--sand) 100%);
+  padding: 2.5rem 0 3.5rem;
+}
+
+.catch-form {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.35rem 1.4rem;
+  margin: 0 0 1.5rem;
+}
+
+.catch-form h3 {
+  margin: 0 0 0.85rem;
+  font-family: var(--display);
+}
+
+.catch-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem 1rem;
+}
+
+.catch-form label,
+.catch-notes-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.catch-form input,
+.catch-form select,
+.catch-form textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #c5d0da;
+  border-radius: 10px;
+}
+
+.catch-notes-label {
+  grid-column: 1 / -1;
+}
+
+.catch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.1rem;
+}
+
+.catch-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.catch-photo {
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: #d9e4ec;
+}
+
+.catch-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.catch-body {
+  padding: 0.9rem 1rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.catch-body h3 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.catch-water {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.catch-notes {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #3d4f5f;
+}
+
+.catch-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.catch-del {
+  margin-top: 0.45rem;
+  align-self: flex-start;
+  border: 1px solid var(--coral);
+  background: #fff;
+  color: var(--coral);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.catch-del:hover {
+  background: var(--coral);
+  color: #fff;
+}
+
+.loc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 0.85rem;
+}
+
 @media (max-width: 600px) {
   .fb-row {
     grid-template-columns: 1fr;

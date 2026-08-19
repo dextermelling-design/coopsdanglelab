@@ -1707,7 +1707,10 @@
             ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>`
             : ''
         }
-        <button type="button" class="fav-btn lg" data-fav="${spot.id}">Save this water</button>`;
+        <div class="loc-actions">
+          <button type="button" class="fav-btn lg" data-fav="${spot.id}">Save this water</button>
+          <a class="btn btn-primary btn-sm" href="catches.html?water=${encodeURIComponent(spot.id)}"><i class="fa-solid fa-camera"></i> Log a catch</a>
+        </div>`;
     }
     applyLiveSurfaceTemp(true);
     renderLocationTemp();
@@ -1851,7 +1854,10 @@
           bait: 'Bait Guide',
           charts: 'Lunar & Solar',
           about: 'About',
-          usage: 'Usage'
+          usage: 'Usage',
+          catches: 'Catch board',
+          location: 'Location',
+          favorites: 'My waters'
         };
         const rows = Object.keys(all.pages || {})
           .sort((a, b) => all.pages[b] - all.pages[a])
