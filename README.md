@@ -15,6 +15,23 @@ Then open **http://localhost:8765**
 
 USGS river temps also work if you open `index.html` directly (CORS allowed). NOAA NDBC buoys need `serve.py` because the browser blocks direct NDBC requests.
 
+## Pages
+
+Sticky top nav. Each tool is its own URL so Netlify / Google Analytics can see real usage:
+
+| URL | Page |
+|-----|------|
+| `/` or `index.html` | Home |
+| `temps.html` | Live water temps |
+| `spots.html` | Featured waters |
+| `depths.html` | Depth charts & how deep to fish |
+| `bait.html` | Bait guide |
+| `charts.html` | Lunar & solar |
+| `about.html` | How to use the desk |
+| `usage.html` | First-party page-view totals |
+
+Old `#temps` hashes on the home page redirect to the new files.
+
 ## Features
 
 | Section | What it does |
@@ -35,9 +52,12 @@ Coops fishing/
   assets/js/national.js  # regions, extra U.S. waters, extra gauges
   assets/js/depths.js    # fishing areas, bathymetry, water-column model
   assets/js/astro.js     # moon/sun/solunar math
-  assets/js/app.js       # UI + live fetches
+  assets/js/app.js         # UI + live fetches
+  assets/js/chrome.js      # sticky top nav
+  assets/js/track.js       # page-view beacon
+  temps.html spots.html depths.html bait.html charts.html about.html usage.html
   netlify.toml
-  netlify/functions/ndbc.js
+  netlify/functions/
 ```
 
 ## Feedback (Netlify)

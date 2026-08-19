@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Depth Charts | Coop's Fishing</title>
+  <meta name="description" content="Depth charts, named fishing areas, and how deep to fish from surface temperature.">
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/images/logo-mark.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="depths">
+<script src="assets/js/chrome.js"></script>
+<main>
+<section id="depths">
+<div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Where they sit</span>
+          <h2>Depth charts &amp; fishing areas</h2>
+          <p>
+            Named public structure for each hotspot — reefs, bays, channels, dams —
+            plus a water-column model that turns today’s surface temp into
+            <strong>how deep to fish</strong> for the species on that water.
+          </p>
+        </div>
+        <div class="place-filter" id="depthFilters">
+          <div class="filter-pills" id="depthRegionPills" role="group" aria-label="Depth chart region"></div>
+          <div class="place-filter-row">
+            <label>State <select id="depthStateSelect"></select></label>
+            <label class="grow">Water <select id="depthWaterSelect"></select></label>
+          </div>
+        </div>
+        <div class="depth-overview" id="depthOverview"></div>
+        <div class="depth-stage">
+          <div class="depth-panel">
+            <div class="depth-panel-head">
+              <h3><i class="fa-solid fa-map"></i> Fishing areas</h3>
+              <p class="muted small">Tap a numbered pin. Coords are public area centers — not secret waypoints.</p>
+            </div>
+            <div id="depthMap" class="depth-map" role="img" aria-label="Map of fishing areas"></div>
+          </div>
+          <div class="depth-panel">
+            <div class="depth-panel-head">
+              <h3><i class="fa-solid fa-layer-group"></i> Depth schematic</h3>
+              <p class="muted small">Stylized bathymetry for planning — not a navigation chart.</p>
+            </div>
+            <div id="depthSchematic" class="depth-schematic"></div>
+            <div class="depth-legend" id="depthLegend"></div>
+          </div>
+        </div>
+        <div class="depth-profile-card">
+          <h3><i class="fa-solid fa-chart-area"></i> Cross-section</h3>
+          <div id="depthProfile"></div>
+        </div>
+        <div class="depth-howto" id="depthHowto">
+          <div class="depth-panel-head depth-howto-head">
+            <div>
+              <h3><i class="fa-solid fa-temperature-arrow-down"></i> How deep to fish</h3>
+              <p class="muted small" id="columnStatus">Modeled from surface temp and this lake’s mix type.</p>
+            </div>
+            <form class="surf-form" id="surfForm">
+              <label>Surface temp (°F)
+                <input type="number" id="surfTempInput" min="32" max="95" step="0.1" inputmode="decimal">
+              </label>
+              <button type="button" class="btn btn-ghost btn-sm" id="useLiveSurf" style="color:var(--navy);border-color:#c5d0da;background:#fff">
+                <i class="fa-solid fa-satellite-dish"></i> Use live
+              </button>
+              <button type="submit" class="btn btn-primary btn-sm">Update column</button>
+            </form>
+          </div>
+          <div class="column-grid">
+            <div id="columnChart"></div>
+            <div id="columnAdvice"></div>
+          </div>
+        </div>
+        <div id="areaDetail" class="area-detail" hidden></div>
+        <div class="areas-grid" id="areasGrid"></div>
+        <p class="status-line" style="margin-top:1.25rem">
+          <i class="fa-solid fa-circle-info"></i>
+          Areas come from official DNR reports, NOAA Great Lakes bathymetry, and well-known public fishing names.
+          Not a navigation chart. Always check local regs.
+        </p>
+      </div>
+</section>
+</main>
+<script src="assets/js/chrome-end.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/national.js"></script>
+<script src="assets/js/depths.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

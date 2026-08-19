@@ -79,12 +79,16 @@ a:hover {
   color: var(--gold);
 }
 
-/* Nav */
+html {
+  scroll-padding-top: 8rem;
+}
+
+/* Nav — always pinned */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(10, 22, 40, 0.95);
+  background: rgba(10, 22, 40, 0.97);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(77, 184, 217, 0.15);
 }
@@ -337,6 +341,82 @@ a:hover {
   color: #dce8f2;
   padding: 0.7rem 1.25rem;
   font-weight: 600;
+}
+
+.mobile-menu a.active {
+  color: #fff;
+  background: rgba(77, 184, 217, 0.12);
+}
+
+.page-sheet {
+  padding: 2.25rem 0 4.5rem;
+  min-height: 62vh;
+}
+
+.desk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.desk-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 1.2rem 1.25rem;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  border: 1px solid rgba(15, 39, 68, 0.06);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.desk-card:hover {
+  transform: translateY(-3px);
+  color: var(--text);
+}
+
+.desk-card i {
+  color: var(--lake);
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.desk-card h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.2rem;
+}
+
+.desk-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.usage-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.usage-table th,
+.usage-table td {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid #eef2f5;
+}
+
+.usage-table th {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
 }
 
 /* Hero */

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lunar & Solar Charts | Coop's Fishing</title>
+  <meta name="description" content="Solunar feeding windows, moon phase, sunrise and golden hour for U.S. fishing waters.">
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/images/logo-mark.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="charts">
+<script src="assets/js/chrome.js"></script>
+<main>
+<section id="charts">
+<div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">When to fish</span>
+          <h2>Lunar &amp; solar charts</h2>
+          <p>
+            Moon phase, rise/set, solunar major &amp; minor feeding periods, plus sunrise, sunset,
+            and golden hour. Pick a featured water or use your location.
+          </p>
+        </div>
+        <div class="astro-controls">
+          <label>Location <select id="locationSelect"></select></label>
+          <button type="button" class="btn btn-ghost btn-sm" id="useMyLocation" style="color:var(--navy);border-color:#c5d0da;background:#fff">
+            <i class="fa-solid fa-location-crosshairs"></i> Use my location
+          </button>
+          <span id="customLocLabel"></span>
+          <div class="date-nav">
+            <button type="button" class="btn btn-ghost btn-sm" id="astroPrev" style="color:var(--navy);border-color:#c5d0da;background:#fff" aria-label="Previous day">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <span id="astroDateLabel"></span>
+            <button type="button" class="btn btn-ghost btn-sm" id="astroNext" style="color:var(--navy);border-color:#c5d0da;background:#fff" aria-label="Next day">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" id="astroToday">Today</button>
+          </div>
+        </div>
+        <div class="astro-grid">
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-moon" style="color:var(--lake)"></i> Moon phase</h3>
+            <div class="phase-box" id="phaseDisplay"></div>
+            <div class="rating-box" id="dayRating"></div>
+          </div>
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-sun" style="color:var(--amber)"></i> Solar chart</h3>
+            <div id="solarPanel"></div>
+          </div>
+          <div class="astro-card">
+            <h3><i class="fa-solid fa-fish-fins" style="color:var(--moss)"></i> Solunar periods</h3>
+            <div id="solunarPanel"></div>
+          </div>
+          <div class="astro-card">
+            <h3><i class="fa-regular fa-calendar" style="color:var(--lake)"></i> Monthly moon calendar</h3>
+            <span id="moonMonthLabel"></span>
+            <div class="moon-calendar" id="moonCalendar"></div>
+            <p class="muted small" style="margin-top:0.75rem">Tap a day to load that date's charts. Peak days (new/full) are highlighted.</p>
+          </div>
+          <div class="astro-card timeline-card">
+            <h3><i class="fa-solid fa-timeline" style="color:var(--coral)"></i> 24-hour bite timeline</h3>
+            <div id="dayTimeline"></div>
+          </div>
+        </div>
+      </div>
+</section>
+</main>
+<script src="assets/js/chrome-end.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/national.js"></script>
+<script src="assets/js/depths.js"></script>
+<script src="assets/js/astro.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

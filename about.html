@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Coop's Fishing</title>
+  <meta name="description" content="How to use Coop's Fishing and where the water data comes from.">
+  <link rel="icon" href="assets/images/logo-mark.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="assets/images/logo-mark.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="about">
+<script src="assets/js/chrome.js"></script>
+<main>
+<section id="about">
+<div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Coop's Fishing</span>
+          <h2>How to use this desk</h2>
+          <p>Stack the odds: right water, right temp, right bait, right window.</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>Game plan</h3>
+            <ul>
+              <li><strong>Temps first</strong> — <a href="temps.html">see which waters</a> are in the species' sweet spot.</li>
+              <li><strong>Pick a spot</strong> — <a href="spots.html">filter by region or state</a>, then open trophy notes and seasonal timing.</li>
+              <li><strong>Read the depth chart</strong> — <a href="depths.html">named reefs, bays, and holes</a>, then fish the temp layer those species want.</li>
+              <li><strong>Match the bait</strong> — <a href="bait.html">live and artificial options</a> by fish.</li>
+              <li><strong>Check the sky</strong> — <a href="charts.html">major/minor solunar periods</a> and golden hour for low-light bites.</li>
+            </ul>
+          </div>
+          <div class="about-card">
+            <h3>Data sources</h3>
+            <ul>
+              <li><strong>USGS Water Data API</strong> — continuous water temperature at river/stream gauges near popular U.S. fisheries.</li>
+              <li><strong>NOAA NDBC</strong> — Great Lakes buoy water temps (via Netlify function proxy).</li>
+              <li><strong>Depth &amp; areas</strong> — public structure from DNR reports and NOAA Great Lakes bathymetry; column temps are modeled from the surface reading (not a probe).</li>
+              <li><strong>Solar &amp; lunar</strong> — calculated in your browser (approx. rise/set &amp; solunar windows).</li>
+            </ul>
+            <p style="margin:1rem 0 0;font-size:0.9rem;opacity:0.85">
+              Solunar theory is a traditional angler tool — combine it with weather fronts, barometer, and local reports.
+              Always follow state regulations and practice safe catch-and-release on trophy fish.
+            </p>
+          </div>
+        </div>
+      </div>
+</section>
+</main>
+<script src="assets/js/chrome-end.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/national.js"></script>
+<script src="assets/js/depths.js"></script>
+
+<script src="assets/js/app.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

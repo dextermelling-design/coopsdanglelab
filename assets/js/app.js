@@ -11,6 +11,31 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
+  const HASH_PAGES = {
+    '#temps': 'temps.html',
+    '#spots': 'spots.html',
+    '#depths': 'depths.html',
+    '#bait': 'bait.html',
+    '#charts': 'charts.html',
+    '#about': 'about.html'
+  };
+  if (HASH_PAGES[location.hash]) {
+    location.replace(HASH_PAGES[location.hash]);
+  }
+
+  function currentFile() {
+    const name = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    return name || 'index.html';
+  }
+
+  function depthsUrl(waterId, areaId) {
+    const q = new URLSearchParams();
+    if (waterId) q.set('water', waterId);
+    if (areaId) q.set('area', areaId);
+    const s = q.toString();
+    return 'depths.html' + (s ? '?' + s : '');
+  }
+
   /** Latest live readings, reused by the depth-column model. */
   let liveTempReadings = [];
   let selectedChartId = 'erie-west';
@@ -218,34 +243,39 @@
     return (await Promise.all(jobs)).filter(Boolean);
   }
 
-  async function loadWaterTemps() {
-    const grid = $('#tempGrid');
-    const status = $('#tempStatus');
-    if (!grid) return;
-
-    status.textContent = 'Pulling live gauges from USGS & NOAA…';
-    grid.innerHTML = skeletonCards(6);
-
-    const errors = [];
+  async function fetchAllLiveTemps() {
     let usgs = [];
     let ndbc = [];
-
     try {
       usgs = await fetchUsgsTemps();
     } catch (e) {
       console.warn('USGS temps', e);
-      errors.push('USGS');
     }
-
     try {
       ndbc = await fetchNdbcTemps();
     } catch (e) {
       console.warn('NDBC temps', e);
-      errors.push('NDBC');
+    }
+    liveTempReadings = [...usgs, ...ndbc];
+    return { usgs, ndbc, results: liveTempReadings };
+  }
+
+  async function loadWaterTemps() {
+    const grid = $('#tempGrid');
+    const status = $('#tempStatus');
+    if (!grid) {
+      const silent = await fetchAllLiveTemps();
+      if (silent.results.length && $('#depths')) {
+        applyLiveSurfaceTemp(false);
+        renderDepths();
+      }
+      return;
     }
 
-    const results = [...usgs, ...ndbc];
-    liveTempReadings = results;
+    status.textContent = 'Pulling live gauges from USGS & NOAA…';
+    grid.innerHTML = skeletonCards(6);
+
+    const { usgs, ndbc, results } = await fetchAllLiveTemps();
 
     if (!results.length) {
       status.innerHTML =
@@ -331,7 +361,7 @@
         const chart = COOPS.depthChartById(s.id);
         const depthLine = chart
           ? `<p class="spot-depth"><i class="fa-solid fa-ruler-vertical"></i> Avg ${chart.avgDepth} ft · Max ${chart.maxDepth} ft · ${chart.areas.length} areas</p>
-             <a class="spot-chart-link" href="#depths" data-open-depth="${s.id}">Depth chart &amp; how deep to fish →</a>`
+             <a class="spot-chart-link" href="${depthsUrl(s.id)}">Depth chart &amp; how deep to fish →</a>`
           : '';
         return `
       <article class="spot-card">
@@ -352,9 +382,6 @@
       })
       .join('');
 
-    grid.querySelectorAll('[data-open-depth]').forEach((a) => {
-      a.addEventListener('click', () => openDepthChart(a.dataset.openDepth));
-    });
   }
 
   function statesInRegion(regionId) {
@@ -422,9 +449,28 @@
 
   /* ---------- Depth charts, areas, column temps ---------- */
 
-  function openDepthChart(id) {
+  function applyDepthQuery() {
+    const q = new URLSearchParams(location.search);
+    const water = q.get('water');
+    const area = q.get('area');
+    if (water) {
+      selectedChartId = water;
+      const spot = (COOPS.spots || []).find((s) => s.id === water);
+      if (spot) {
+        depthFilter.region = spot.regionId || 'all';
+        depthFilter.state = 'all';
+      }
+    }
+    if (area) selectedAreaId = area;
+  }
+
+  function openDepthChart(id, areaId) {
+    if (!$('#depths')) {
+      location.href = depthsUrl(id, areaId);
+      return;
+    }
     selectedChartId = id;
-    selectedAreaId = null;
+    selectedAreaId = areaId || null;
     const spot = (COOPS.spots || []).find((s) => s.id === id);
     if (spot) {
       depthFilter.region = spot.regionId || 'all';
@@ -432,10 +478,7 @@
     }
     applyLiveSurfaceTemp(false);
     renderDepths();
-    const section = $('#depths');
-    if (section && window.location.hash === '#depths') {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    history.replaceState(null, '', depthsUrl(id, areaId));
   }
 
   function chartForSelection() {
@@ -1123,18 +1166,12 @@
       btn.addEventListener('click', () => menu.classList.toggle('open'));
       $$('#mobileMenu a').forEach((a) => a.addEventListener('click', () => menu.classList.remove('open')));
     }
-    // active section highlight
-    const links = $$('.nav-links a[href^="#"]');
-    const sections = links.map((a) => $(a.getAttribute('href'))).filter(Boolean);
-    const onScroll = () => {
-      const y = window.scrollY + 100;
-      let current = sections[0];
-      for (const s of sections) {
-        if (s.offsetTop <= y) current = s;
-      }
-      links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + current.id));
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const file = currentFile();
+    $$('.nav-links a, #mobileMenu a').forEach((a) => {
+      const href = (a.getAttribute('href') || '').split('?')[0];
+      const isHome = file === 'index.html' && (href === 'index.html' || href === './' || href === '/');
+      a.classList.toggle('active', href === file || isHome);
+    });
   }
 
   function initFeedback() {
@@ -1406,25 +1443,7 @@
       input.value = hit.label;
       input.blur();
     }
-    const spotSearch = $('#spotSearch');
-    if (spotSearch) spotSearch.value = '';
-    placeFilter.q = '';
-    placeFilter.region = hit.spot.regionId || 'all';
-    placeFilter.state = 'all';
-    placeFilter.species = 'all';
-    fillStateSelect($('#stateSelect'), placeFilter.region, 'all');
-    syncSpotFilterChrome();
-    renderSpots();
-
-    selectedChartId = hit.id;
-    selectedAreaId = hit.areaId || null;
-    depthFilter.region = hit.spot.regionId || 'all';
-    depthFilter.state = 'all';
-    applyLiveSurfaceTemp(true);
-    renderDepths();
-    const dest = $('#depths') || $('#spots');
-    dest?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    history.replaceState(null, '', '#depths');
+    location.href = depthsUrl(hit.id, hit.areaId || null);
   }
 
   function initFilters() {
@@ -1527,13 +1546,60 @@
     fillLocationSelect();
     initAstroControls();
     initDepthControls();
+    applyDepthQuery();
     applyLiveSurfaceTemp(true);
     renderSpots();
     renderBait();
     renderAstro();
     renderDepths();
-    loadWaterTemps();
+    if ($('#tempGrid') || $('#depths')) loadWaterTemps();
     const y = $('#year');
     if (y) y.textContent = new Date().getFullYear();
+    renderUsage();
   });
+
+  function renderUsage() {
+    const el = $('#usagePanel');
+    if (!el) return;
+    el.textContent = 'Loading usage…';
+    fetch('/api/hit')
+      .then((r) => r.json())
+      .then((data) => {
+        const all = (data && data.all) || { pages: {}, total: 0 };
+        const day = (data && data.day) || { pages: {}, total: 0 };
+        const names = {
+          home: 'Home',
+          index: 'Home',
+          temps: 'Water Temps',
+          spots: 'Hot Spots',
+          depths: 'Depth Charts',
+          bait: 'Bait Guide',
+          charts: 'Lunar & Solar',
+          about: 'About',
+          usage: 'Usage'
+        };
+        const rows = Object.keys(all.pages || {})
+          .sort((a, b) => all.pages[b] - all.pages[a])
+          .map((k) => {
+            const label = names[k] || k;
+            const n = all.pages[k] || 0;
+            const d = (day.pages && day.pages[k]) || 0;
+            return `<tr><td>${escapeHtml(label)}</td><td>${d}</td><td>${n}</td></tr>`;
+          })
+          .join('');
+        el.innerHTML =
+          '<p class="muted">Page views since this tracker went live. Today vs all time.</p>' +
+          '<table class="usage-table"><thead><tr><th>Page</th><th>Today</th><th>All time</th></tr></thead><tbody>' +
+          (rows || '<tr><td colspan="3">No views yet.</td></tr>') +
+          '</tbody></table>' +
+          '<p class="muted small">Total: ' +
+          (all.total || 0) +
+          ' · Today: ' +
+          (day.total || 0) +
+          '</p>';
+      })
+      .catch(() => {
+        el.textContent = 'Usage stats are only available on the live Netlify site.';
+      });
+  }
 })();
